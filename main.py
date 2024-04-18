@@ -1,4 +1,4 @@
-from src import api_hh, dbmanager
+from src import hh, dbmanager, config
 
 
 def main():
@@ -21,8 +21,12 @@ def main():
         773781,     # 16 DATADVANCE
 
             ]
-    params = 0
-    data = 0
+    db_params = config.config()
+    api = api_hh.HH()
+    employers = api.get_employers(employer_ids=employer_ids)
+    vacancies = api.get_vacancies()
+    api.create_db(db_params)
+    api.save_to_db()
 
 
 if __name__ == '__main__':
