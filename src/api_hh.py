@@ -14,41 +14,27 @@ class AbstractAPI(ABC):
     def get_url(self, params):
         pass
 
-    @abstractmethod
-    def get_vacancies(self):
-        pass
-
-    @abstractmethod
-    def create_db(self):
-        pass
-
-    @abstractmethod
-    def save_to_db(self):
-        pass
-
 
 class HH(AbstractAPI, ABC):
     """
     Класс для работы с API HeadHunter
     """
 
-    def __init__(self, area=113, employer_id=None) -> None:
+    def __init__(self, area=113) -> None:
         self.area = area
-        self.params = {
-            'text': '',
-            'page': 0,
-            'per_page': 20,
-            'area': self.area,
-            'only_with_vacancies': True,
-            'employer_id': employer_id,
-        }
-        vacancies = []
+        self.params = None
 
     def get_url(self, params):
         """Возвращает ответ из сайта по заданным параметрам
         :param params: параметры для запроса"""
 
-        return requests.get("https://api.hh.ru/vacancies/", self.params).json()['items']
+        try:
+            response = requests.get("https://api.hh.ru/employers/", self.params).json()['items']
+            response.raise_for_status()
+            return response
+        except requests.exceptions.HTTPError as e:
+            print(e.args)
+            return None
 
     def create_db(self):
         db_name = 'HH'
@@ -91,13 +77,40 @@ class HH(AbstractAPI, ABC):
         conn.commit()
         conn.close()
 
-    def get_vacancies(self):
-        """Возвращает список вакансий"""
+    def get_employers(self, employer_ids: list):
+        """Возвращает список работодателей"""
+        employers_list = []
+        for employer_id in employer_ids:
+            name_list = []
+            url_list = []
+            employers = self.get_url(employer_id)
+            for employer in employers:
+                name_list.append(employer['employer']['name'])
+                url_list.append(employer['employer']['url'])
+            # Удаляем повторения в названиях работодателей и url функцией "set"
+            set_name_list = set(name_list)
+            set_url_list = set(url_list)
+            for name in set_name_list:
+                for url in set_url_list:
+                    employers_list.append({'employers': {'name': name, 'url': url}})
+        return employers_list
 
-        self.vacancies = self.get_url(self.params)
-        return self.vacancies
+    def get_vacancies(self, employee_ids):
+        """Возвращает список вакансий"""
+        vacancies_list = []
+        for employee_id in employee_ids:
+            vacancies = self.get_url(employee_id)
+            for vacancy in vacancies:
+                vacancies_list.append({'vacancies': {
+                    'vacancy': vacancy['name'],
+                    'city': vacancy['area']['name'],
+                    'salary_from': vacancy['salary']['from'],
+                    'salary_to': vacancy['salary']['to'],
+                    'date_published': vacancy['published_at'],
+                    'url_vacancy': vacancy['url'],
+                }})
+        return vacancies_list
 
     def save_to_db(self):
         with open('vacancies.json', 'r') as f:
             self.vacancies = json.load(f)
-
