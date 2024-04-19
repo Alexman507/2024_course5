@@ -4,7 +4,7 @@ from configparser import ConfigParser
 def config(filename='database.ini', section="postgresql"):
     """Возвращает параметры подключения к локальной ДБ, записанные в файл 'database.ini'
     :param filename: файл с конфигом
-    :param section: секция в """
+    :param section: раздел хранения параметров подключения """
     parser = ConfigParser()
     parser.read(filename)
     db_params = {}

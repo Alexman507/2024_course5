@@ -22,10 +22,10 @@ def main():
 
             ]
     db_params = config.config()
-    api = api_hh.HH()
+    api = hh.HH()
     employers = api.get_employers(employer_ids=employer_ids)
     vacancies = api.get_vacancies()
-    api.create_db(db_params)
+    api.create_db("HH", db_params)
     api.save_to_db()
 
 
