@@ -3,24 +3,24 @@ from src import hh, db, dbmanager, config, employers, vacancies
 
 def main():
     employer_ids = [  # Выбранные работодатели
-        2365329,    # 1 UpTrader
-        2061860,    # 2 ООО Фандог
-        2539590,    # 3 ООО DM365
-        77364,      # 4 Petrovich
-        1795976,    # 5 ITMO
-        856498,     # 6 LESTA GAMES
-        10938683,   # 7 Yakov Lushkov Neuro-Agency
-        10069618,   # 8 ООО Редеп Эдженси
-        5817234,    # 9 ООО Оператор Газпром ИД
-        10955120,   # 10 СДД
-        5686111,    # 11 Olima
-        4295296,    # 12 SoftWise
-        2261,       # 13 Балтика
-        581224,     # 14 Монополия
-        53676,      # 15 ОБИТ
-        773781,     # 16 DATADVANCE
+        2365329,  # 1 UpTrader
+        2061860,  # 2 ООО Фандог
+        2539590,  # 3 ООО DM365
+        77364,  # 4 Petrovich
+        1795976,  # 5 ITMO
+        856498,  # 6 LESTA GAMES
+        10938683,  # 7 Yakov Lushkov Neuro-Agency
+        10069618,  # 8 ООО Редеп Эдженси
+        5817234,  # 9 ООО Оператор Газпром ИД
+        10955120,  # 10 СДД
+        5686111,  # 11 Olima
+        4295296,  # 12 SoftWise
+        2261,  # 13 Балтика
+        581224,  # 14 Монополия
+        53676,  # 15 ОБИТ
+        773781,  # 16 DATADVANCE
 
-            ]
+    ]
     db_params = config.config()
     db_store = db.DBStore(db_params=db_params)
     employers1 = employers.Employers()
@@ -30,6 +30,10 @@ def main():
     vacancies_to_db = vacancies1.get_vacancies(vacancies_ids)
     db_store.create_db()
     db_store.save_to_db(vacancies_list=vacancies_to_db, employer_list=employers_to_db)
+
+
+def check_dbmanager_workflow():
+    pass
 
 
 if __name__ == '__main__':
