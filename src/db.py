@@ -34,7 +34,7 @@ class DBStore:
         with conn.cursor() as cur:
             cur.execute('''
                CREATE TABLE vacancies(
-               vacancy_id SERIAL PRIMARY KEY,
+               vacancy_id INT PRIMARY KEY,
                vacancy_name VARCHAR(150) NOT NULL,
                city_name VARCHAR(100),
                publish_date DATE,
@@ -51,7 +51,7 @@ class DBStore:
         conn.commit()
         conn.close()
 
-    def save_to_db(self, response, employer_list):
+    def save_to_db(self, vacancies_list, employer_list):
         name = self.db_name
         params = self.db_params
         conn = psycopg2.connect(name, **params)

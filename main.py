@@ -1,4 +1,4 @@
-from src import hh, dbmanager, config
+from src import hh, db, dbmanager, config, employers, vacancies
 
 
 def main():
@@ -22,11 +22,14 @@ def main():
 
             ]
     db_params = config.config()
-    api = hh.HH()
-    employers = api.get_employers(employer_ids=employer_ids)
-    vacancies = api.get_vacancies()
-    api.create_db("HH", db_params)
-    api.save_to_db()
+    db_store = db.DBStore(db_params=db_params)
+    employers1 = employers.Employers()
+    employers_to_db, vacancy_url = employers1.get_employers(employer_ids)
+    vacancies1 = vacancies.Vacancies()
+    vacancies_ids = employers1.get_vacancies_ids(vacancy_url)
+    vacancies_to_db = vacancies1.get_vacancies(vacancies_ids)
+    db_store.create_db()
+    db_store.save_to_db(vacancies_list=vacancies_to_db, employer_list=employers_to_db)
 
 
 if __name__ == '__main__':
