@@ -37,24 +37,46 @@ class DBManager(DBStore):
         """получает список всех вакансий с указанием названия компании,
         названия вакансии, зряплаты и ссылки на вакансию"""
         request_name = self.get_all_vacancies.__doc__
-        request = "SELECT vacancies.name AS vacancy, employers.name AS employer, CONCAT(salary_from, ' - ', salary_to)\
-                             AS salary, vacancies.url, requirements FROM vacancies \
-                            JOIN employers USING (employer_id) \
-                            ORDER BY vacancies.salary DESC;"
+        request = '''SELECT vacancies.name AS vacancy, employers.name AS employer, CONCAT(salary_from, ' - ', salary_to)
+                             AS salary, vacancies.url, requirements FROM vacancies
+                            JOIN employers USING (employer_id)
+                            ORDER BY vacancies.salary DESC;'''
         self.get_data_from_bd(request, request_name)
 
     def get_avg_salary(self):
         """Получает среднюю зарплату по вакансиям"""
-        pass
+        request_name = self.get_avg_salary.__doc__
+        request = '''SELECT vacancies.name, CONCAT(CAST(AVG(vacancies.salary) AS int), ' рублей'), 
+                        CONCAT(COUNT(vacancies.name), ' шт.') AS number_of_vacancies 
+                        FROM vacancies GROUP BY vacancies.name 
+                        ORDER BY AVG(vacancies.salary) DESC;'''
+
+        self.get_data_from_bd(request, request_name)
 
     def get_vacancies_with_higher_salary(self):
         """Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям"""
-        pass
+        request_name = self.get_vacancies_with_higher_salary.__doc__
+        request = '''SELECT * FROM vacancies, 
+                        (SELECT AVG(vacancies.salary) AS middle_salary FROM vacancies WHERE vacancies.salary > 0) 
+                        AS vacancy_avg WHERE vacancies.salary > vacancy_avg.middle_salary 
+                        ORDER BY vacancies.salary DESC;'''
+        self.get_data_from_bd(request, request_name)
 
-    def get_vacancies_with_keyword(self):
+    def get_vacancies_with_keyword(self, word_list):
         """
         Получает список всех вакансий,
         в названии которых содержатся переданные в метод слова
         """
-        pass
+        request_name = self.get_vacancies_with_keyword.__doc__
+        head = "SELECT * FROM vacancies"
+        end = ''
+        for i, w in enumerate(word_list, start=0):
+            if i == 0:
+                end += f" WHERE vacancies.name LIKE '%{w}%'"
+            else:
+                end += f" OR vacancies.name LIKE '%{w}%'"
+        else:
+            end += ' ORDER BY vacancies.name DESC;'
+        request = head + end
+        self.get_data_from_bd(request, request_name)
 
