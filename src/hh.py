@@ -22,7 +22,7 @@ class HH(AbstractAPI, ABC):
         try:
             response = requests.get(url, self.params)
             response.raise_for_status()
-            return response
+            return response.json()
         except requests.exceptions.HTTPError as e:
             print(e.args)
             return None

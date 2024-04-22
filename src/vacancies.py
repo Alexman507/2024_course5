@@ -4,7 +4,16 @@ from src.hh import HH
 class Vacancies(HH):
     """Класс для работы с API HeadHunter по адресу https://api.hh.ru/vacancies/"""
     def get_vacancies(self, vacancies_ids):
-        """Возвращает список вакансий"""
+        """Возвращает список вакансий
+        :param vacancies_ids: список id вакансий
+        :return: список вакансий {
+        название,
+        город,
+        зарплата "от",
+        зарплата "до",
+        дата публикации,
+        url вакансии,
+        }"""
         vacancies_list = []
         for vacancy_id in vacancies_ids:
             vacancies = self.get_response(url=f'https://api.hh.ru/vacancies/{vacancy_id}', params=None)
