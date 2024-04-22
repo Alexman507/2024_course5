@@ -3,7 +3,7 @@ import psycopg2
 
 class DBStore:
     """
-    Класс для работы с базой данных
+    Класс для работы с базой данных (подключение, создание, запись)
     """
     def __init__(self, db_params, db_name='HH'):
         self.db_params: dict = db_params
@@ -66,7 +66,7 @@ class DBStore:
                     employer
                 )
                 employer_id = cur.fetchone()[0]
-            for item in response:
+            for item in vacancies_list:
                 cur.execute(
                     '''
                     INSERT INTO vacancies (
