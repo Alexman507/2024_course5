@@ -41,7 +41,7 @@ def check_dbmanager_workflow():
     # db_manager.get_all_vacancies()
     # db_manager.get_avg_salary()
     # db_manager.get_vacancies_with_higher_salary()
-    db_manager.get_vacancies_with_keyword(word_list=['python', 'разработчик'])
+    db_manager.get_vacancies_with_keyword(word_list=['Python', 'разработчик'])
 
 
 if __name__ == '__main__':
