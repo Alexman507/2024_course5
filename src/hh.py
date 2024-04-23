@@ -21,10 +21,10 @@ class HH(AbstractAPI, ABC):
 
         try:
             response = requests.get(url, self.params)
-            response.raise_for_status()
+            # response.raise_for_status()
             return response.json()
         except requests.exceptions.HTTPError as e:
-            print(e.args)
-            return None
+            print('Ошибка подключения, попробуйте позже...', e.args)
+            exit(1)
 
 

@@ -22,13 +22,15 @@ def main():
 
     ]
     db_params = config.config()
-    db_store = db.DBStore(db_params=db_params)
+    db_store = db.DBStore(db_params=db_params, db_name='hh')
+    # db_store.check_connection()
+    # db_store.create_db()
+    # db_store.create_tables()
     employers1 = employers.Employers()
     employers_to_db, vacancy_url = employers1.get_employers(employer_ids)
     vacancies1 = vacancies.Vacancies()
     vacancies_ids = employers1.get_vacancies_ids(vacancy_url)
     vacancies_to_db = vacancies1.get_vacancies(vacancies_ids)
-    db_store.create_db()
     db_store.save_to_db(vacancies_list=vacancies_to_db, employer_list=employers_to_db)
 
 
