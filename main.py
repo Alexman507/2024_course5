@@ -35,8 +35,15 @@ def main():
 
 
 def check_dbmanager_workflow():
-    pass
+    db_params = config.config()
+    db_manager = dbmanager.DBManager(db_params=db_params, db_name='hh')
+    # db_manager.get_companies_and_vacancies_count()
+    # db_manager.get_all_vacancies()
+    # db_manager.get_avg_salary()
+    # db_manager.get_vacancies_with_higher_salary()
+    db_manager.get_vacancies_with_keyword(word_list=['python', 'разработчик'])
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    check_dbmanager_workflow()
